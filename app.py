@@ -18,4 +18,4 @@ def calculate_emission():
     return render_template('home.html', co2_emission=co2_emission)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True) 
