@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Emissions Calculator</title>
+    <link rel="stylesheet" href="/static/calculator.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;700&family=Roboto+Mono:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/fontawesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery -->
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .calculator {
+            background-image: url('/static/images/istockphoto-1317323736-612x612.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        .emissionInput {
+            background-color: rgba(0, 0, 0, 0);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .arrow {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 30px;
+            cursor: pointer;
+            animation: bounce 1.5s infinite;
+            color: white;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        .response-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: rgb(0, 0, 0);
+            padding: 20px;
+        }
+
+        .response-box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            width: 80%;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Section -->
+    <section class="calculator">
+        <div class="emissionInput">
+            <h1>Today I...</h1>
+            <form id="queryForm">
+                <input type="text" id="userQuery" name="query" placeholder="Tell me what you got up to today" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="arrow" id="scrollArrow">&#8595;</div>
+    </section>
+
+    <!-- Response Section -->
+    <section class="response-section" id="responseSection" style="display: none;">
+        <div id="responseContainer">
+            <h2>How to Reduce Your Carbon Footprint</h2>
+            <!-- Response boxes will be appended here -->
+        </div>
+    </section>
+
+    <script>
+        $('#queryForm').submit(function(event) {
+            event.preventDefault(); // Prevent form refresh
+
+            const userQuery = $('#userQuery').val(); // Get user input
+
+            // Display a loading message while waiting for the AI response
+            $('#responseContainer').html("<p>Loading...</p>");
+            $('#responseSection').show();
+
+            // Send the query to the backend
+            $.ajax({
+                type: 'POST',
+                url: '/calculate', // Flask route for calculation
+                contentType: 'application/json',
+                data: JSON.stringify({ query: userQuery }),
+                success: function(response) {
+                    // Clear previous responses
+                    $('#responseContainer').html("");
+
+                    // Display the emissions estimate first
+                    const emissionsBox = `
+                        <div class="response-box">
+                            <h3>CO2 Emissions Estimate:</h3>
+                            <p>${response.emissions}</p>
+                        </div>`;
+                    $('#responseContainer').append(emissionsBox);
+
+                    // Display each suggestion (limit to 3)
+                    response.suggestions.forEach((suggestion, index) => {
+                        const suggestionBox = `
+                            <div class="response-box">
+                                <h3>Suggestion ${index + 1}:</h3>
+                                <p>${suggestion}</p>
+                            </div>`;
+                        $('#responseContainer').append(suggestionBox);
+                    });
+
+                    // Scroll to the response section after the AI response
+                    $('html, body').animate({
+                        scrollTop: $("#responseSection").offset().top
+                    }, 1000);
+                },
+                error: function() {
+                    // Handle errors
+                    $('#responseContainer').html("<p>There was an error processing your request. Please try again.</p>");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

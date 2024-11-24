@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+        }
+        .calculator {
+            background-image: url('/static/images/istockphoto-1317323736-612x612.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgb(255, 255, 255);
+            text-align: center;
+            position: relative;
+        }
+        .emissionInput {
+            background-color: rgb(0, 0, 0);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .response-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: white;
+            padding: 20px;
+        }
+        .response-box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+            background-color: #000000;
+            width: 80%;
+            max-width: 600px;
+        }
+    </style>    
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Emissions Calculator</title>
+    <link rel="stylesheet" href="/static/calculator.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;700&family=Roboto+Mono:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/fontawesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery -->
+</head>
+<body>
+    <section class="calculator" style="background-image: url('/static/images/istockphoto-1317323736-612x612.jpg');">
+        <div class="emissionInput">
+            <h1>Today I...</h1>
+          
+            
+            <form id="queryForm">
+                <input type="text" id="userQuery" name="query" placeholder="Tell me what you got up to today" required>
+                <button type="submit">Submit</button>
+            </form>
+
+            <div id="responseContainer" style="display: none;">
+                <h2>Response:</h2>
+                <p id="aiResponse"></p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        $('#queryForm').submit(function(event) {
+            event.preventDefault(); 
+
+            const userQuery = $('#userQuery').val(); 
+
+         
+            $('#aiResponse').text("Loading...");
+            $('#responseContainer').show();
+
+       
+            $.ajax({
+                type: 'POST',
+                url: '/calculate', 
+                contentType: 'application/json',
+                data: JSON.stringify({ query: userQuery }),
+                success: function(response) {
+                    $('#aiResponse').text(response.data);
+                },
+                error: function() {
+                    $('#aiResponse').text("Error processing the request.");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

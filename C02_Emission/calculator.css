@@ -1,0 +1,79 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    /*border:solid;*/
+}
+.calculator {
+    height: 100vh;
+    width: 100%;
+    background-image: url("/static/images/istockphoto-1317323736-612x612.jpg");
+    background-color: #aeff00;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+}
+
+.emissionInput {
+    width: 80%; 
+    max-width: 600px; 
+    margin: 0;
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    padding: 20px; 
+    background-color: #00000022; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+}
+
+
+.emissionInput {
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    height: 100%; 
+    text-align: center;   
+}
+
+.emissionInput h1 {
+    color: #aeff00;
+    font-size: 36px; 
+}
+
+.emissionInput input[type="text"] {
+    width: 100%; 
+    max-width: 100%; 
+    padding: 12px 20px; 
+    font-size: 16px; 
+    margin-bottom: 15px;
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    box-sizing: border-box; 
+}
+
+.emissionInput button {
+    width: 100%; 
+    padding: 12px 20px;
+    background-color: #ffffff; 
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 5px;
+    font-size: 16px; 
+    cursor: pointer;
+}
+
+.emissionInput button:hover {
+    background-color: #aeff00;
+    transition: 1s;
+}
+
+.CalculatorHeader{
+    margin: 10px 0px 40px;
+    font-size: 20px;
+    font-weight: 600;
+    color: black;
+}
+
+
